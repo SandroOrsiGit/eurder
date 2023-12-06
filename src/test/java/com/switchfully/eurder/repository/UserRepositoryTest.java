@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,6 +41,22 @@ class UserRepositoryTest {
 		List<Customer> actual = userRepository.getCustomers();
 
 		assertThat(actual).isNotNull();
+	}
+
+	@Test
+	void whenGetCustomerById_thenReturnCustomer(){
+		userRepository.createCustomer(customer);
+
+		Customer actual = userRepository.getCustomerById(customer.getCustomerId());
+
+		assertThat(actual).isEqualTo(customer);
+	}
+
+	@Test
+	void givenNonExistentCustomerId_whenGetCustomerById_thenReturnNull(){
+		Customer actual = userRepository.getCustomerById(UUID.randomUUID());
+
+		assertThat(actual).isNull();
 	}
 
 }

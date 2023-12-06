@@ -8,6 +8,7 @@ import com.switchfully.eurder.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,5 +34,9 @@ public class CustomerService {
 				.stream()
 				.map(customerMapper::mapCustomerToCustomerDto)
 				.collect(Collectors.toList());
+	}
+
+	public CustomerDto getCustomerById(UUID customerId) {
+		return customerMapper.mapCustomerToCustomerDto(customerRepository.getCustomerById(customerId));
 	}
 }

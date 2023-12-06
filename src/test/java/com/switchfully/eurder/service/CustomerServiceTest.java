@@ -57,11 +57,20 @@ class CustomerServiceTest {
 
 	@Test
 	void whenGetCustomers_thenCallRepositoryAndMapper(){
-		customerService.getCustomers();
 		when(customerRepository.getCustomers()).thenReturn(List.of(customer));
+		customerService.getCustomers();
 
 		verify(customerMapper).mapCustomerToCustomerDto(customer);
 		verify(customerRepository).getCustomers();
+	}
+
+	@Test
+	void whenGetCustomerById_thenCallRepositoryAndMapper(){
+		when(customerRepository.getCustomerById(customer.getCustomerId())).thenReturn(customer);
+		customerService.getCustomerById(customer.getCustomerId());
+
+		verify(customerMapper).mapCustomerToCustomerDto(customer);
+		verify(customerRepository).getCustomerById(customer.getCustomerId());
 	}
 
 }

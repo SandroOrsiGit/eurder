@@ -40,6 +40,13 @@ public class UserRepository {
 				.collect(Collectors.toList());
 	}
 
+	public Customer getCustomerById(UUID customerId) {
+		return getCustomers().stream()
+				.filter(customer -> customer.getCustomerId().equals(customerId))
+				.findFirst()
+				.orElse(null);
+	}
+
 	public void createCustomer(Customer customer) {
 		users.put(customer.getCustomerId(), customer);
 	}

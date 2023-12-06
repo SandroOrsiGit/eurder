@@ -2,6 +2,7 @@ package com.switchfully.eurder.domain.dto;
 
 import com.switchfully.eurder.domain.Address;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CustomerDto {
@@ -43,5 +44,18 @@ public class CustomerDto {
 
 	public String getPhoneNumber() {
 		return phoneNumber;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CustomerDto that = (CustomerDto) o;
+		return Objects.equals(customerId, that.customerId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(customerId);
 	}
 }

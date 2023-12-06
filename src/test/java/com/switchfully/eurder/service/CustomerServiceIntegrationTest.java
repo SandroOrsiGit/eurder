@@ -68,8 +68,18 @@ class CustomerServiceIntegrationTest {
 
 	@Test
 	void whenGetCustomers_thenReturnListOfCustomerDto(){
+		customerRepository.createCustomer(customer);
+
 		List<CustomerDto> actual = customerService.getCustomers();
 
-		assertThat(actual).hasOnlyElementsOfTypes(CustomerDto.class);
+		assertThat(actual).contains(customerMapper.mapCustomerToCustomerDto(customer));
+	}
+
+	@Test
+	void whenGetCustomerById_thenReturnCustomer(){
+		customerRepository.createCustomer(customer);
+		CustomerDto actual = customerService.getCustomerById(customer.getCustomerId());
+
+		assertThat(actual).isEqualTo(customerMapper.mapCustomerToCustomerDto(customer));
 	}
 }

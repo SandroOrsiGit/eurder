@@ -6,6 +6,8 @@ import com.switchfully.eurder.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -44,4 +46,11 @@ class CustomerControllerTest {
 		verify(customerService).getCustomers();
 	}
 
+	@Test
+	void whenGetCustomerById_thenCallService(){
+		UUID uuid = UUID.randomUUID();
+		customerController.getCustomerById(uuid);
+
+		verify(customerService).getCustomerById(uuid);
+	}
 }
