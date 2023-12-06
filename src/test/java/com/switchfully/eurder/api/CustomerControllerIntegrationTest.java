@@ -57,13 +57,20 @@ class CustomerControllerIntegrationTest {
 				.post("/api/customer")
 				.then()
 				.assertThat()
-				.statusCode(201)
-				.extract()
-				.as(CustomerDto.class);
+				.statusCode(201);
 
 		assertThat(customerRepository.getCustomers()).isNotEmpty();
 	}
 
 	@Test
-	void whenGetCustomers_thenReturnOk
+	void whenGetCustomers_thenReturnOk(){
+		given()
+				.baseUri("http://localhost")
+				.port(port)
+				.when()
+				.get("/api/customer")
+				.then()
+				.assertThat()
+				.statusCode(200);
+	}
 }
