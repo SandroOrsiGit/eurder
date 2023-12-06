@@ -4,16 +4,19 @@ import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.dto.CreateCustomerDto;
 import com.switchfully.eurder.domain.dto.CustomerDto;
 import com.switchfully.eurder.mapper.CustomerMapper;
-import com.switchfully.eurder.repository.CustomerRepository;
+import com.switchfully.eurder.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
 
-	CustomerRepository customerRepository;
+	UserRepository customerRepository;
 	CustomerMapper customerMapper;
 
-	public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+	public CustomerService(UserRepository customerRepository, CustomerMapper customerMapper) {
 		this.customerRepository = customerRepository;
 		this.customerMapper = customerMapper;
 	}
@@ -23,5 +26,12 @@ public class CustomerService {
 		customerRepository.createCustomer(customer);
 
 		return customerMapper.mapCustomerToCustomerDto(customer);
+	}
+
+	public List<CustomerDto> getCustomers() {
+		return customerRepository.getCustomers()
+				.stream()
+				.map(customerMapper::mapCustomerToCustomerDto)
+				.collect(Collectors.toList());
 	}
 }

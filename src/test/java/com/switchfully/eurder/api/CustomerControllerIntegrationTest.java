@@ -1,11 +1,10 @@
 package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.dto.CreateCustomerDto;
 import com.switchfully.eurder.domain.dto.CustomerDto;
 import com.switchfully.eurder.mapper.CustomerMapper;
-import com.switchfully.eurder.repository.CustomerRepository;
+import com.switchfully.eurder.repository.UserRepository;
 import com.switchfully.eurder.service.CustomerService;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +15,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CustomerControllerIntegrationTest {
@@ -29,7 +26,7 @@ class CustomerControllerIntegrationTest {
 	private CustomerService customerService;
 
 	@Autowired
-	private CustomerRepository customerRepository;
+	private UserRepository customerRepository;
 
 	@Autowired
 	private CustomerMapper customerMapper;
@@ -50,7 +47,7 @@ class CustomerControllerIntegrationTest {
 	}
 
 	@Test
-	void whenCreateCustomer_thenReturnHttpStatusCreated() {
+	void whenCreateCustomer_thenReturnCreatedAndPopulateRepository() {
 		given()
 				.contentType(ContentType.JSON)
 				.baseUri("http://localhost")
@@ -66,4 +63,7 @@ class CustomerControllerIntegrationTest {
 
 		assertThat(customerRepository.getCustomers()).isNotEmpty();
 	}
+
+	@Test
+	void whenGetCustomers_thenReturnOk
 }

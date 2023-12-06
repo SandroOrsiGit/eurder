@@ -37,4 +37,11 @@ class CustomerControllerTest {
 		verify(customerService).createCustomer(createCustomerDto);
 	}
 
+	@Test
+	void whenGetCustomers_thenCallService(){
+		customerController.getCustomers();
+
+		verify(customerService).getCustomers();
+	}
+
 }

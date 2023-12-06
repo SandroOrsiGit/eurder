@@ -1,23 +1,25 @@
 package com.switchfully.eurder.service;
 
 import com.switchfully.eurder.domain.Address;
+import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.dto.CreateCustomerDto;
 import com.switchfully.eurder.domain.dto.CustomerDto;
 import com.switchfully.eurder.mapper.CustomerMapper;
-import com.switchfully.eurder.repository.CustomerRepository;
+import com.switchfully.eurder.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CustomerServiceIntegrationTest {
 
 	@Autowired
-	private CustomerRepository customerRepository;
+	private UserRepository customerRepository;
 
 	@Autowired
 	CustomerMapper customerMapper;
@@ -26,10 +28,21 @@ class CustomerServiceIntegrationTest {
 	CustomerService customerService;
 
 	CreateCustomerDto createCustomerDto;
+	Customer customer;
 
 	@BeforeEach
 	void init(){
 		createCustomerDto = new CreateCustomerDto(
+				"Karel",
+				"Polmark",
+				"karel@switchfully.be",
+				new Address("Brussel",
+						"Keizerslaan",
+						"155",
+						"1000"),
+				"0495123456");
+
+		customer = new Customer(
 				"Karel",
 				"Polmark",
 				"karel@switchfully.be",
@@ -51,5 +64,12 @@ class CustomerServiceIntegrationTest {
 		assertThat(actual.getEmail()).isEqualTo(createCustomerDto.getEmail());
 		assertThat(actual.getAddress()).isEqualTo(createCustomerDto.getAddress());
 		assertThat(actual.getPhoneNumber()).isEqualTo(createCustomerDto.getPhoneNumber());
+	}
+
+	@Test
+	void whenGetCustomers_thenReturnListOfCustomerDto(){
+		List<CustomerDto> actual = customerService.getCustomers();
+
+		assertThat(actual).hasOnlyElementsOfTypes(CustomerDto.class);
 	}
 }

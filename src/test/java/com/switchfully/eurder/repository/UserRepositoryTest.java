@@ -5,18 +5,18 @@ import com.switchfully.eurder.domain.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.junit.jupiter.api.Assertions.*;
 
-class CustomerRepositoryTest {
+class UserRepositoryTest {
 
-	CustomerRepository customerRepository;
+	UserRepository userRepository;
 	Customer customer;
 
 	@BeforeEach
 	void init(){
-		customerRepository = new CustomerRepository();
+		userRepository = new UserRepository();
 		customer = new Customer(
 				"Karel",
 				"Polmark",
@@ -30,9 +30,16 @@ class CustomerRepositoryTest {
 
 	@Test
 	void whenCreateCustomer_thenAddCustomerToMap(){
-		customerRepository.createCustomer(customer);
+		userRepository.createCustomer(customer);
 
-		assertThat(customerRepository.getCustomers()).contains(entry(customer.getCustomerId(), customer));
+		assertThat(userRepository.getCustomers()).contains(customer);
+	}
+
+	@Test
+	void whenGetCustomers_thenReturnListOfCustomers(){
+		List<Customer> actual = userRepository.getCustomers();
+
+		assertThat(actual).isNotNull();
 	}
 
 }
