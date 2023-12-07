@@ -24,13 +24,7 @@ class ItemControllerIntegrationTest {
 	private int port;
 
 	@Autowired
-	private ItemService itemService;
-
-	@Autowired
 	private ItemRepository itemRepository;
-
-	@Autowired
-	private ItemMapper itemMapper;
 
 	private CreateItemDto createItemDto;
 

@@ -2,6 +2,7 @@ package com.switchfully.eurder.repository;
 
 import com.switchfully.eurder.domain.Address;
 import com.switchfully.eurder.domain.Customer;
+import com.switchfully.eurder.exceptions.IdNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserRepositoryTest {
 
@@ -51,12 +53,11 @@ class UserRepositoryTest {
 
 		assertThat(actual).isEqualTo(customer);
 	}
-
 	@Test
-	void givenNonExistentCustomerId_whenGetCustomerById_thenReturnNull(){
-		Customer actual = userRepository.getCustomerById(UUID.randomUUID());
-
-		assertThat(actual).isNull();
+	void givenInvalidId_whenGetCustomerById_thenThrowIdNotFoundException(){
+		assertThatThrownBy(() -> userRepository.getCustomerById(customer.getCustomerId()))
+				.isInstanceOf(IdNotFoundException.class)
+				.hasMessageContaining("The specified customer ID could not be found");
 	}
 
 }

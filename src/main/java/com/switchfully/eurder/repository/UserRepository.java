@@ -3,6 +3,7 @@ package com.switchfully.eurder.repository;
 import com.switchfully.eurder.domain.Address;
 import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.exceptions.IdNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class UserRepository {
 		return getCustomers().stream()
 				.filter(customer -> customer.getCustomerId().equals(customerId))
 				.findFirst()
-				.orElse(null);
+				.orElseThrow(() -> new IdNotFoundException("The specified customer ID could not be found"));
 	}
 
 	public void createCustomer(Customer customer) {
