@@ -1,54 +1,24 @@
 package com.switchfully.eurder.repository;
 
 import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.exceptions.IdNotFoundException;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-	private final Map<UUID, User> users;
+	List<User> findAll();
 
-	public UserRepository() {
-		users = new HashMap<>();
-		for(int i = 1; i < 6; i++){
-			Customer customer = new Customer(
-					"customer" + i,
-					"Doe",
-					"user" + i + "@switchfully.be",
-					new Address("Brussel",
-							"Keizerslaan",
-							"1" + i,
-							"1000"),
-					"049512345" + i);
-			users.put(customer.getCustomerId(), customer);
-		}
-	}
+	Optional<User> findUserByUserId(Long userId);
 
-	public List<Customer> getCustomers() {
-		return users.values()
-				.stream()
-				.filter(user -> user instanceof Customer)
-				.map(user -> (Customer) user)
-				.collect(Collectors.toList());
-	}
 
-	public Customer getCustomerById(UUID customerId) {
-		return getCustomers().stream()
-				.filter(customer -> customer.getCustomerId().equals(customerId))
-				.findFirst()
-				.orElseThrow(() -> new IdNotFoundException("The specified customer ID could not be found"));
-	}
-
-	public void createCustomer(Customer customer) {
-		users.put(customer.getCustomerId(), customer);
-	}
 }

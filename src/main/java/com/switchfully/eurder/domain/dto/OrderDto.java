@@ -1,31 +1,35 @@
 package com.switchfully.eurder.domain.dto;
 
-import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.ItemGroup;
-import com.switchfully.eurder.domain.Order;
+import com.switchfully.eurder.domain.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class OrderDto {
-	private final UUID orderId;
-	Customer customer;
+	private final Long orderId;
+	private final double totalPrice;
 	private final List<ItemGroup> itemGroups;
+	private final User user;
 
-	public OrderDto(UUID orderId, Customer customer, List<ItemGroup> itemGroups) {
+	public OrderDto(Long orderId, double totalPrice, User user, List<ItemGroup> itemGroups) {
 		this.orderId = orderId;
-		this.customer = customer;
+		this.totalPrice = totalPrice;
+		this.user = user;
 		this.itemGroups = itemGroups;
 	}
 
-	public UUID getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
 
 	public List<ItemGroup> getItemGroups() {
 		return itemGroups;
+	}
+
+	public User getUser() {
+		return user;
 	}
 
 	@Override
@@ -39,5 +43,9 @@ public class OrderDto {
 	@Override
 	public int hashCode() {
 		return Objects.hash(orderId);
+	}
+
+	public double getTotalPrice() {
+		return totalPrice;
 	}
 }

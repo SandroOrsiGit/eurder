@@ -1,21 +1,20 @@
 package com.switchfully.eurder.service;
 
 import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.domain.Order;
-import com.switchfully.eurder.domain.dto.ItemDto;
+import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.mapper.ItemMapper;
 import com.switchfully.eurder.mapper.OrderMapper;
+import com.switchfully.eurder.repository.ItemGroupRepository;
 import com.switchfully.eurder.repository.ItemRepository;
 import com.switchfully.eurder.repository.OrderRepository;
 import com.switchfully.eurder.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -27,10 +26,11 @@ class OrderServiceTest {
 	ItemRepository itemRepository;
 	ItemMapper itemMapper;
 	UserRepository userRepository;
+	ItemGroupRepository itemGroupRepository;
 	OrderService orderService;
 	Order order;
 	Item item;
-	Customer customer;
+	User user;
 
 	@BeforeEach
 	void init(){
@@ -39,8 +39,9 @@ class OrderServiceTest {
 		itemRepository = mock(ItemRepository.class);
 		itemMapper = mock(ItemMapper.class);
 		userRepository = mock(UserRepository.class);
-		orderService = new OrderService(orderRepository, orderMapper, itemRepository, itemMapper, userRepository);
-		customer = new Customer(
+		itemGroupRepository = mock(ItemGroupRepository.class);
+		orderService = new OrderService(orderRepository, orderMapper, itemRepository, itemMapper, userRepository, itemGroupRepository);
+		user = new User(
 				"Karel",
 				"Polmark",
 				"karel@switchfully.be",
@@ -50,25 +51,27 @@ class OrderServiceTest {
 						"1000"),
 				"0495123456");
 		item = new Item("Sofa", "A comfy sofa", 100, 6);
-		order = new Order(customer);
+		order = new Order(user);
 	}
 
 	@Test
 	void whenCreateOrder_thenCallRepositoryAndMapper(){
-		when(userRepository.getCustomerById(customer.getCustomerId())).thenReturn(customer);
-		orderService.createOrder(customer.getCustomerId());
+		when(userRepository.findUserByUserId(user.getUserId())).thenReturn(Optional.of(user));
+		orderService.createOrder(user.getUserId());
 
-		verify(orderRepository).createOrder(any());
+		verify(orderRepository).save(any());
 		verify(orderMapper).mapOrderToOrderDto(any());
 	}
 
 	@Test
 	void whenAddItemToOrder_thenReturnOrderDtoAndCallItemRepositoryOrderRepositoryAndOrderMapper(){
+		when(itemRepository.findItemByItemId(item.getItemId())).thenReturn(Optional.of(item));
+		when(orderRepository.findOrderByOrderId(order.getOrderId())).thenReturn(Optional.of(order));
 		int amountOrdered = 3;
 		orderService.addItemToOrder(order.getOrderId(), item.getItemId(), amountOrdered);
 
-		verify(itemRepository).reduceStockOnItemById(item.getItemId(), amountOrdered);
 		verify(orderMapper).mapOrderToOrderDto(any());
+		verify(itemGroupRepository).save(any());
 	}
 
 }

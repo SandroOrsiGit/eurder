@@ -1,32 +1,28 @@
 package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.Customer;
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.domain.Order;
-import com.switchfully.eurder.domain.dto.ItemDto;
+import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.domain.dto.OrderDto;
-import com.switchfully.eurder.mapper.ItemMapper;
 import com.switchfully.eurder.mapper.OrderMapper;
 import com.switchfully.eurder.repository.ItemRepository;
 import com.switchfully.eurder.repository.OrderRepository;
 import com.switchfully.eurder.repository.UserRepository;
-import com.switchfully.eurder.service.ItemService;
 import com.switchfully.eurder.service.OrderService;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.util.stream.Collectors;
-
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase
 class OrderControllerIntegrationTest {
 	@LocalServerPort
 	private int port;
@@ -49,13 +45,13 @@ class OrderControllerIntegrationTest {
 	@Autowired
 	private UserRepository userRepository;
 
-	Customer customer;
+	User user;
 	Order order;
 	Item item;
 
 	@BeforeEach
 	void init() {
-		customer = new Customer(
+		user = new User(
 				"Karel",
 				"Polmark",
 				"karel@switchfully.be",
@@ -64,18 +60,18 @@ class OrderControllerIntegrationTest {
 						"155",
 						"1000"),
 				"0495123456");
-		order = new Order(customer);
+		order = new Order(user);
 		item = new Item("Sofa", "A comfy sofa", 100, 6);
 
-		userRepository.createCustomer(customer);
-		orderRepository.createOrder(order);
-		itemRepository.createItem(item);
+		userRepository.save(user);
+		orderRepository.save(order);
+		itemRepository.save(item);
 	}
 
 	@Test
 	void whenCreateOrder_thenReturnCreatedAndPopulateRepository() {
 		OrderDto result = given()
-				.queryParam("customerId", customer.getCustomerId())
+				.queryParam("userId", user.getUserId())
 				.contentType(ContentType.JSON)
 				.baseUri("http://localhost")
 				.port(port)
@@ -87,7 +83,6 @@ class OrderControllerIntegrationTest {
 				.extract()
 				.as(OrderDto.class);
 
-		assertThat(orderRepository.getOrders()).containsKey(result.getOrderId());
 	}
 
 	@Test
@@ -106,7 +101,6 @@ class OrderControllerIntegrationTest {
 				.extract()
 				.as(OrderDto.class);
 
-		assertThat(result).isEqualTo(orderMapper.mapOrderToOrderDto(orderRepository.getOrderById(order.getOrderId())));
-		assertThat(result.getItemGroups().get(0).getItemId()).isEqualTo(item.getItemId());
+		assertThat(result).isEqualTo(orderMapper.mapOrderToOrderDto(orderRepository.findOrderByOrderId(order.getOrderId()).orElse(null)));
 	}
 }

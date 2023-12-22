@@ -1,16 +1,17 @@
 package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.Customer;
-import com.switchfully.eurder.domain.dto.CreateCustomerDto;
-import com.switchfully.eurder.domain.dto.CustomerDto;
-import com.switchfully.eurder.mapper.CustomerMapper;
+import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.domain.dto.CreateUserDto;
+import com.switchfully.eurder.domain.dto.UserDto;
+import com.switchfully.eurder.mapper.UserMapper;
 import com.switchfully.eurder.repository.UserRepository;
-import com.switchfully.eurder.service.CustomerService;
+import com.switchfully.eurder.service.UserService;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -20,26 +21,27 @@ import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CustomerControllerIntegrationTest {
+@AutoConfigureTestDatabase
+class UserControllerIntegrationTest {
 
 	@LocalServerPort
 	private int port;
 
 	@Autowired
-	private CustomerService customerService;
+	private UserService userService;
 
 	@Autowired
-	private UserRepository customerRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	private CustomerMapper customerMapper;
+	private UserMapper userMapper;
 
-	private CreateCustomerDto createCustomerDto;
-	private Customer customer;
+	private CreateUserDto createUserDto;
+	private User user;
 
 	@BeforeEach
 	void init() {
-		createCustomerDto = new CreateCustomerDto(
+		createUserDto = new CreateUserDto(
 				"Karel",
 				"Polmark",
 				"karel@switchfully.be",
@@ -48,7 +50,7 @@ class CustomerControllerIntegrationTest {
 						"155",
 						"1000"),
 				"0495123456");
-		customer = new Customer(
+		user = new User(
 				"Karel",
 				"Polmark",
 				"karel@switchfully.be",
@@ -60,56 +62,56 @@ class CustomerControllerIntegrationTest {
 	}
 
 	@Test
-	void whenCreateCustomer_thenReturnCreatedAndPopulateRepository() {
+	void whenCreateUser_thenReturnCreatedAndPopulateRepository() {
 		given()
 				.contentType(ContentType.JSON)
 				.baseUri("http://localhost")
 				.port(port)
 				.when()
-				.body(createCustomerDto)
-				.post("/api/customer")
+				.body(createUserDto)
+				.post("/api/user")
 				.then()
 				.assertThat()
 				.statusCode(201);
 
-		assertThat(customerRepository.getCustomers()).isNotEmpty();
+		assertThat(userRepository.findAll()).isNotEmpty();
 	}
 
 	@Test
 	void whenGetCustomers_thenReturnOk(){
-		customerRepository.createCustomer(customer);
+		userRepository.save(user);
 
-		List<CustomerDto> result = given()
+		List<UserDto> result = given()
 				.baseUri("http://localhost")
 				.port(port)
 				.when()
-				.get("/api/customer")
+				.get("/api/user")
 				.then()
 				.assertThat()
 				.statusCode(200)
 				.extract()
 				.body()
 				.jsonPath()
-				.getList(".", CustomerDto.class);
+				.getList(".", UserDto.class);
 
-		assertThat(result).contains(customerMapper.mapCustomerToCustomerDto(customer));
+		assertThat(result).contains(userMapper.mapUserToUserDto(user));
 	}
 
 	@Test
 	void whenGetCustomerById_thenReturnOk(){
-		customerRepository.createCustomer(customer);
+		userRepository.save(user);
 
-		CustomerDto result = given()
+		UserDto result = given()
 				.baseUri("http://localhost")
 				.port(port)
 				.when()
-				.get("/api/customer/" + customer.getCustomerId())
+				.get("/api/user/" + user.getUserId())
 				.then()
 				.assertThat()
 				.statusCode(200)
 				.extract()
-				.as(CustomerDto.class);
+				.as(UserDto.class);
 
-		assertThat(result).isEqualTo(customerMapper.mapCustomerToCustomerDto(customer));
+		assertThat(result).isEqualTo(userMapper.mapUserToUserDto(user));
 	}
 }

@@ -32,6 +32,6 @@ class ItemServiceTest {
 		itemService.createItem(createItemDto);
 
 		verify(itemMapper).mapCreateItemDtoToItem(createItemDto);
-		verify(itemRepository).createItem(itemMapper.mapCreateItemDtoToItem(createItemDto));
+		verify(itemRepository).save(itemMapper.mapCreateItemDtoToItem(createItemDto));
 	}
 }

@@ -7,11 +7,13 @@ import com.switchfully.eurder.repository.ItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 class ItemServiceIntegrationTest {
 	@Autowired
 	ItemRepository itemRepository;
@@ -33,7 +35,7 @@ class ItemServiceIntegrationTest {
 	void whenCreateItem_thenReturnItemDtoAndPopulateRepository(){
 		ItemDto actual = itemService.createItem(createItemDto);
 
-		assertThat(itemRepository.getItems().size()).isNotEqualTo(0);
+		assertThat(itemRepository.findAll().size()).isNotEqualTo(0);
 
 		assertThat(actual.getName()).isEqualTo(createItemDto.getName());
 		assertThat(actual.getDescription()).isEqualTo(createItemDto.getDescription());

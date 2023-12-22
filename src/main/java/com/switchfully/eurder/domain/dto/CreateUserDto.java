@@ -4,7 +4,7 @@ import com.switchfully.eurder.domain.Address;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public class CreateCustomerDto {
+public class CreateUserDto {
 
 	@NotNull
 	@NotEmpty
@@ -21,7 +21,7 @@ public class CreateCustomerDto {
 	@NotEmpty
 	private final String phoneNumber;
 
-	public CreateCustomerDto(String firstName, String lastName, String email, Address address, String phoneNumber) {
+	public CreateUserDto(String firstName, String lastName, String email, Address address, String phoneNumber) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;

@@ -5,16 +5,16 @@ import com.switchfully.eurder.domain.Address;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CustomerDto {
-	private UUID customerId;
+public class UserDto {
+	private Long userId;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private Address Address;
 	private String phoneNumber;
 
-	public CustomerDto(UUID customerId, String firstName, String lastName, String email, com.switchfully.eurder.domain.Address address, String phoneNumber) {
-		this.customerId = customerId;
+	public UserDto(Long userId, String firstName, String lastName, String email, com.switchfully.eurder.domain.Address address, String phoneNumber) {
+		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -22,8 +22,8 @@ public class CustomerDto {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public UUID getCustomerId() {
-		return customerId;
+	public Long getUserId() {
+		return userId;
 	}
 
 	public String getFirstName() {
@@ -50,12 +50,12 @@ public class CustomerDto {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		CustomerDto that = (CustomerDto) o;
-		return Objects.equals(customerId, that.customerId);
+		UserDto userDto = (UserDto) o;
+		return Objects.equals(userId, userDto.userId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(customerId);
+		return Objects.hash(userId);
 	}
 }

@@ -4,12 +4,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ItemDto {
-	private final UUID itemId;
+	private final Long itemId;
 	private final String name, description;
 	private final double price;
 	private final int amountInStock;
 
-	public ItemDto(UUID itemId, String name, String description, double price, int amountInStock) {
+	public ItemDto(Long itemId, String name, String description, double price, int amountInStock) {
 		this.itemId = itemId;
 		this.name = name;
 		this.description = description;
@@ -17,7 +17,7 @@ public class ItemDto {
 		this.amountInStock = amountInStock;
 	}
 
-	public UUID getItemId() {
+	public Long getItemId() {
 		return itemId;
 	}
 
